@@ -4,13 +4,16 @@ import requests
 
 import feedparser
 import sys
+from config import *
+
+#import config
 
 #if len(sys.argv) < 2:
 #    print("USAGE: python feedparse.py <rss feed link>")
 #    exit()
 
 #rss_url = sys.argv[1]
-rss_url = 'https://www.site24x7.com/sv.do?id=TomG9XHaG6PCbxrHL55MhmA5a8ufEbLgD8vvWmukU2LpnofnY%2B9ibvRH9c1%2BorSW4EftR5DVZx7s%0AWMXEoqXfP%2F6PgJrnHQiJ&rss=true'
+#rss_url = 'https://www.site24x7.com/sv.do?id=TomG9XHaG6PCbxrHL55MhmA5a8ufEbLgD8vvWmukU2LpnofnY%2B9ibvRH9c1%2BorSW4EftR5DVZx7s%0AWMXEoqXfP%2F6PgJrnHQiJ&rss=true'
 print("TITLE","                                                   ","LINK")
 print("------------------------------------------------------------------")
 
@@ -19,25 +22,23 @@ feed = feedparser.parse( rss_url )
 y = len(feed[ "items" ])
 
 
-
 print (y)
 
-#print (feed["items"][1][ "title" ])
-
-
+tname = {}
 for x in range(0,y):
-    "tname{}".format(x) = feed["items"][x][ "title" ]
-    if ('down' in tname):
-        print (tname(x))
-#        atext = (tname)
-    if tname == confirmed_alert:
-        print('It is confirmed alert')
+    tname[x] = feed["items"][x][ "title" ]
+#    print ()
+    if ('down' in tname[x]):
+        print (tname[x])
+        atext = tname[x]
+#    if tname[x] == confirmed_alert:
+#        print('It is confirmed alert')
     
 
 #############################################################
 
-TOKEN = "306317133:AAELUg13H13lSOmFiHc_UUmRueJgzy_z8DI"
-URL = "https://api.telegram.org/bot{}/".format(TOKEN)
+#TOKEN = "306317133:AAELUg13H13lSOmFiHc_UUmRueJgzy_z8DI"
+#URL = "https://api.telegram.org/bot{}/".format(TOKEN)
 
 
 
@@ -73,47 +74,67 @@ def send_message(text, chat_id):
     get_url(url)
 
 
+####
 
-
-
+def get_records():
+    feed = feedparser.parse( rss_url )
+    num_records = len(feed[ "items" ])
+#    title = feed["items"][x][ "title" ]
+    return (num_records)
 
 
 
 
 def main():
 #    last_textchat = (None, None)
+    print ('kuku2')
     count = 1
     status = 'not confirmed'
     #while (count < 5):
     while status != 'confirmed':
-        #text, chat = get_last_chat_id_and_text(get_updates())
+        num_records = get_records()
+        print (num_records,'haha')
+
         mytext = 'Prosypaisia'
 #        acktext = "{} said {} - ok".format(sender, text)
         grchat = '-206368020'
         mychat = '384016403'
-        #if (text, chat) != last_textchat:
-        for x in range(0,y):
-            tname = feed["items"][x][ "title" ]
-            if ('down' in tname):
+        newchat = '543548589'
+        tname = {}
+        for x in range(0,num_records):
+            tname[x] = feed["items"][x][ "title" ]
+            atext = tname[x]
+            #print(atext)
+
+
+            if ('down' in atext):
                 print ('upalo')
-                atext = (tname)
                 send_message(atext, grchat)
                 print ('poslal v gruppu')
-                time.sleep(10)
+                print ('zhdu 10 sec')
+                time.sleep(20)
                 text, chat, sender = get_last_chat_id_and_text(get_updates())
-                if (text) == 'on call':
-                    send_message(mytext, mychat)
-                    print ('poslal v lichnyi')
+                if ( (text) == 'on call'):
+#and (chat) == mychat ):
+                    send_message(mytext, newchat)
+                    print ('poslal v lichnyi naparniku')
+                    print (text)
+                    time.sleep(20)
+                    text, chat, sender = get_last_chat_id_and_text(get_updates())
+                    print (text)
+                    if ( (text) == 'on call'):
+                        send_message('kaput', grchat)
+                        break
                 else:
                     acktext = "{} said {} - ok".format(sender, text)
                     send_message(acktext, grchat)
                     print ('poslal podtver v grup')
                     status = 'confirmed'
-                    confirmed_alert = tname
-#            else:
-    #            last_textchat = (text, chat)
-#                time.sleep(1.5)
-#                count = count + 1
+#                    confirmed_alert = tname
+#                else:
+    #                last_textchat = (text, chat)
+#                    time.sleep(1.5)
+#                    count = count + 1
 
 
 if __name__ == '__main__':
