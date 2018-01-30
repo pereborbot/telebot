@@ -1,0 +1,8 @@
+version: "2"
+services:
+  telebot:
+    image: ubupy
+    #command: python app.py
+    command: tail -f /dev/null
+    volumes:
+     - ./:/usr/src/app/telebot # modified here to take into account the new app path
