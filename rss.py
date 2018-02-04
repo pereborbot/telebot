@@ -57,12 +57,19 @@ def get_last_chat_id_and_text(updates):
     return (text, chat_id, sender)
 
 
-#def get_last_from_user(updates)
-#    y = len(updates["result"])
-#    for x in range(0,y):
-#        if (json_data['result'][x]['message']['from']['first_name']) == 'second':
-    
+def get_last_from_user(updates, user):
+    y = len(updates["result"])
+    print (y)
+    for x in range(0,y):
+        if (updates['result'][x]['message']['from']['first_name']) == "{}".format(user):
+            last_message = updates['result'][x]['message']['text']
+    return last_message
 
+#sender = get_last_chat_id_and_text(get_updates())
+#print (sender)  
+last_message = get_last_from_user(get_updates(), "O")
+
+print (last_message)
 
 def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
@@ -74,11 +81,20 @@ def send_message(text, chat_id):
 def get_records():
     feed = feedparser.parse( rss_url )
     num_records = len(feed[ "items" ])
-#    title = feed["items"][x][ "title" ]
     return (num_records)
 
+def get_alert():
+    feed = feedparser.parse( rss_url )
+    num_records = len(feed[ "items" ])
+    for x in range(0,num_records):
+        if (feed["items"][x][ "title" ] == '.* down'):
+            alert = feed["items"][x][ "title" ]
+    return alert
 
-def main_vars()
+#    print ()
+
+
+def main_vars():
     mytext = 'Prosypaisia'
     grchat = '-206368020'
     mychat = '384016403'
@@ -105,44 +121,46 @@ def main():
         grchat = '-206368020'
         mychat = '384016403'
         newchat = '543548589'
-        tname = {}
-        for x in range(0,num_records):
-            tname[x] = feed["items"][x][ "title" ]
-            atext = tname[x]
+#        tname = {}
+#        for x in range(0,num_records):
+#            tname[x] = feed["items"][x][ "title" ]
+#            print (tname[x])
+#            atext = tname[x]
+        alert = get_alert()
 
-#    If no down, sleep X minutes, go to %1
-        
-        if ('down' not in atex)
-           time.sleep(30)
-           main()
-        if ('down' in atext): #confirm or not confirmed
-           print ('upalo')
-           send_message(atext, grchat)
-           print ('poslal v gruppu')
-           print ('zhdu 10 sec')
-           time.sleep(20)
-           text, chat, sender = get_last_chat_id_and_text(get_updates())
-                if ( (text) == 'on call'):
-#and (chat) == mychat ):
-                    send_message(mytext, newchat)
-                    print ('poslal v lichnyi naparniku')
-                    print (text)
-                    time.sleep(20)
-                    text, chat, sender = get_last_chat_id_and_text(get_updates())
-                    print (text)
-                    if ( (text) == 'on call'):
-                        send_message('kaput', grchat)
-                        break
-                else:
-                    acktext = "{} said {} - ok".format(sender, text)
-                    send_message(acktext, grchat)
-                    print ('poslal podtver v grup')
-                    status = 'confirmed'
-#                    confirmed_alert = tname
-#                else:
-    #                last_textchat = (text, chat)
-#                    time.sleep(1.5)
-#                    count = count + 1
+#    If no down, sleep X minutes, go to start
+        if ('down' not in alert):
+            time.sleep(30)
+            main()
+        if ('down' in alert): #confirm or not confirmed
+            print ('upalo')
+            send_message(atext, grchat)
+            print ('poslal v gruppu')
+            print ('zhdu 20 sec')
+            time.sleep(20)
+            last_message = get_last_from_user(get_updates(), "O")
+#           text, chat, sender = get_last_chat_id_and_text(get_updates())
+            if ( (last_message) == 'on call'):
+                send_message(mytext, newchat)
+                print ('poslal v lichnyi naparniku')
+                print (text)
+                time.sleep(20)
+                last_message = get_last_from_user(get_updates(), "mymy")
+#                text, chat, sender = get_last_chat_id_and_text(get_updates())
+                print (last_message, "Otvet G2" )
+                if ( (last_maessage) == 'on call'):
+                    send_message('kaput', grchat)
+                    exit()
+            else:
+                acktext = "{} said {} - ok".format(sender, text)
+                send_message(acktext, grchat)
+                print ('poslal podtver v grup')
+                status = 'confirmed'
+#                confirmed_alert = tname
+#            else:
+    #            last_textchat = (text, chat)
+#                time.sleep(1.5)
+#                count = count + 1
 
 
 
@@ -151,86 +169,86 @@ def main():
 
 
 #    If YES down, 
-            wright it to variable
-            if variable confirmed
-            exit
-        else
-            post to group
-            sleep X to check reply
-            get update from guard1
-
-            If reply is "under control"
-               post to group "Guard1 said "undercontrol""
-               mark variable as confirmed
-               exit
-            else
-               post to GUARD2 "variable is down"
-               sleep for X min
-               get update from Guard2
-               If reply is "under control"
-               post to group "Guard2 said "undercontrol""
-               mark variable as confirmed
-               GO to beginning - exit
-               else
-               post to group "NOBODY THERE"
-               GO to beginning - exit
-               exit
-            
-
-
-
+#            wright it to variable
+#            if variable confirmed
+#            exit
+#        else
+#            post to group
+#            sleep X to check reply
+#            get update from guard1
+#
+#            If reply is "under control"
+#               post to group "Guard1 said "undercontrol""
+#               mark variable as confirmed
+#               exit
+#            else
+#               post to GUARD2 "variable is down"
+#               sleep for X min
+#               get update from Guard2
+#               If reply is "under control"
+#               post to group "Guard2 said "undercontrol""
+#               mark variable as confirmed
+#               GO to beginning - exit
+#               else
+#               post to group "NOBODY THERE"
+#               GO to beginning - exit
+#               exit
+#            
+#
 
 
-def main():
-#    last_textchat = (None, None)
-    print ('kuku2')
-    count = 1
-    status = 'not confirmed'
-    #while (count < 5):
-    while status != 'confirmed':
-        num_records = get_records()
-        print (num_records,'haha')
-
-        mytext = 'Prosypaisia'
-#        acktext = "{} said {} - ok".format(sender, text)
-        grchat = '-206368020'
-        mychat = '384016403'
-        newchat = '543548589'
-        tname = {}
-        for x in range(0,num_records):
-            tname[x] = feed["items"][x][ "title" ]
-            atext = tname[x]
-            #print(atext)
 
 
-            if ('down' in atext):
-                print ('upalo')
-                send_message(atext, grchat)
-                print ('poslal v gruppu')
-                print ('zhdu 10 sec')
-                time.sleep(20)
-                text, chat, sender = get_last_chat_id_and_text(get_updates())
-                if ( (text) == 'on call'):
-#and (chat) == mychat ):
-                    send_message(mytext, newchat)
-                    print ('poslal v lichnyi naparniku')
-                    print (text)
-                    time.sleep(20)
-                    text, chat, sender = get_last_chat_id_and_text(get_updates())
-                    print (text)
-                    if ( (text) == 'on call'):
-                        send_message('kaput', grchat)
-                        break
-                else:
-                    acktext = "{} said {} - ok".format(sender, text)
-                    send_message(acktext, grchat)
-                    print ('poslal podtver v grup')
-                    status = 'confirmed'
-#                    confirmed_alert = tname
+#def main():
+##    last_textchat = (None, None)
+#    print ('kuku2')
+#    count = 1
+#    status = 'not confirmed'
+#    #while (count < 5):
+#    while status != 'confirmed':
+#        num_records = get_records()
+#        print (num_records,'haha')
+#
+#        mytext = 'Prosypaisia'
+##        acktext = "{} said {} - ok".format(sender, text)
+#        grchat = '-206368020'
+#        mychat = '384016403'
+#        newchat = '543548589'
+#        tname = {}
+#        for x in range(0,num_records):
+#            tname[x] = feed["items"][x][ "title" ]
+#            atext = tname[x]
+#            #print(atext)
+#
+#
+#            if ('down' in atext):
+#                print ('upalo')
+#                send_message(atext, grchat)
+#                print ('poslal v gruppu')
+#                print ('zhdu 10 sec')
+#                time.sleep(20)
+#                text, chat, sender = get_last_chat_id_and_text(get_updates())
+#                if ( (text) == 'on call'):
+##and (chat) == mychat ):
+#                    send_message(mytext, newchat)
+#                    print ('poslal v lichnyi naparniku')
+#                    print (text)
+#                    time.sleep(20)
+#                    text, chat, sender = get_last_chat_id_and_text(get_updates())
+#                    print (text)
+#                    if ( (text) == 'on call'):
+#                        send_message('kaput', grchat)
+#                        break
 #                else:
-    #                last_textchat = (text, chat)
-#                    time.sleep(1.5)
-#                    count = count + 1
+#                    acktext = "{} said {} - ok".format(sender, text)
+#                    send_message(acktext, grchat)
+#                    print ('poslal podtver v grup')
+#                    status = 'confirmed'
+##                    confirmed_alert = tname
+##                else:
+#    #                last_textchat = (text, chat)
+##                    time.sleep(1.5)
+##                    count = count + 1
 
 
 if __name__ == '__main__':
