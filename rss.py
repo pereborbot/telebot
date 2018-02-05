@@ -1,7 +1,7 @@
 import time
 import json
 import requests
-
+import re
 import feedparser
 import sys
 from config import *
@@ -61,15 +61,11 @@ def get_last_from_user(updates, user):
     y = len(updates["result"])
     print (y)
     for x in range(0,y):
-        if (updates['result'][x]['message']['from']['first_name']) == "{}".format(user):
+        sender = updates['result'][x]['message']['from']['first_name'] 
+        if re.search(r'sender', "{}".format(user)):
             last_message = updates['result'][x]['message']['text']
     return last_message
 
-#sender = get_last_chat_id_and_text(get_updates())
-#print (sender)  
-last_message = get_last_from_user(get_updates(), "O")
-
-print (last_message)
 
 def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
@@ -87,11 +83,10 @@ def get_alert():
     feed = feedparser.parse( rss_url )
     num_records = len(feed[ "items" ])
     for x in range(0,num_records):
-        if (feed["items"][x][ "title" ] == '.* down'):
+        reply = feed["items"][x]["title"]
+        if re.search(r'.*down.*', reply):
             alert = feed["items"][x][ "title" ]
     return alert
-
-#    print ()
 
 
 def main_vars():
@@ -121,31 +116,29 @@ def main():
         grchat = '-206368020'
         mychat = '384016403'
         newchat = '543548589'
-#        tname = {}
-#        for x in range(0,num_records):
-#            tname[x] = feed["items"][x][ "title" ]
-#            print (tname[x])
-#            atext = tname[x]
-        alert = get_alert()
+        print(get_alert())
 
 #    If no down, sleep X minutes, go to start
-        if ('down' not in alert):
+        if ('down' not in get_alert()):
             time.sleep(30)
             main()
-        if ('down' in alert): #confirm or not confirmed
+        if ('down' in get_alert()): #confirm or not confirmed
             print ('upalo')
             send_message(atext, grchat)
             print ('poslal v gruppu')
             print ('zhdu 20 sec')
             time.sleep(20)
             last_message = get_last_from_user(get_updates(), "O")
+            print(get_last_from_user(get_updates(), "O"))
 #           text, chat, sender = get_last_chat_id_and_text(get_updates())
             if ( (last_message) == 'on call'):
                 send_message(mytext, newchat)
                 print ('poslal v lichnyi naparniku')
-                print (text)
                 time.sleep(20)
                 last_message = get_last_from_user(get_updates(), "mymy")
+                print(get_last_from_user(get_updates(), "mymy"))
+                #print()
+                #last_message = get_last_from_user(get_updates(), "mymy")
 #                text, chat, sender = get_last_chat_id_and_text(get_updates())
                 print (last_message, "Otvet G2" )
                 if ( (last_maessage) == 'on call'):
