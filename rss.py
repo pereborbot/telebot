@@ -4,6 +4,7 @@ import requests
 import re
 import feedparser
 import sys
+from pprint import pprint
 from config import *
 
 print("TITLE","                                                   ","LINK")
@@ -12,7 +13,7 @@ print("------------------------------------------------------------------")
 feed = feedparser.parse( rss_url )
 
 y = len(feed[ "items" ])
-
+#
 
 print (y)
 
@@ -59,12 +60,38 @@ def get_last_chat_id_and_text(updates):
 
 def get_last_from_user(updates, user):
     y = len(updates["result"])
-    print (y)
+#    print (y)
+#    print('after number')
     for x in range(0,y):
-        sender = updates['result'][x]['message']['from']['first_name'] 
-        if re.search(r'sender', "{}".format(user)):
+#        pprint(updates.get('result'))
+        sender = updates['result'][x]['message']['from']['first_name']
+#        sender = updates['result'][x]['message']['from']['first_name']
+#        print("----------------------") 
+#        print('the sender is', sender)
+#        print('####afetrsender#####')
+#        print('the user is', user)        
+#        print('#### Loop end #####')
+#        sender.get('first_name')
+#        if re.search(r'sender', "{}".format(user)):
+#        if re.search(r'"{}".format(user)', sender):
+        if (user == sender):
+#            print('inside if')
+            #pprint (updates.get('result').get('message').get('text'))
             last_message = updates['result'][x]['message']['text']
+#            pprint(last_message)
+#            print('-------------')
+#        else:
+#            print(last_message)
     return last_message
+
+#get_last_from_user(get_updates(), "O")
+
+
+user_message = get_last_from_user(get_updates(), "john")
+
+print(user_message)
+
+
 
 
 def send_message(text, chat_id):
@@ -87,6 +114,11 @@ def get_alert():
         if re.search(r'.*down.*', reply):
             alert = feed["items"][x][ "title" ]
     return alert
+
+
+
+
+
 
 
 def main_vars():
@@ -120,7 +152,7 @@ def main():
 
 #    If no down, sleep X minutes, go to start
         if ('down' not in get_alert()):
-            time.sleep(30)
+            time.sleep(10)
             main()
         if ('down' in get_alert()): #confirm or not confirmed
             print ('upalo')
@@ -135,20 +167,29 @@ def main():
                 send_message(mytext, newchat)
                 print ('poslal v lichnyi naparniku')
                 time.sleep(20)
-                last_message = get_last_from_user(get_updates(), "mymy")
-                print(get_last_from_user(get_updates(), "mymy"))
+                last_message = get_last_from_user(get_updates(), "john")
+                print(get_last_from_user(get_updates(), "john"))
                 #print()
                 #last_message = get_last_from_user(get_updates(), "mymy")
 #                text, chat, sender = get_last_chat_id_and_text(get_updates())
                 print (last_message, "Otvet G2" )
-                if ( (last_maessage) == 'on call'):
+                if ( (last_message) == 'na podhvate'):
                     send_message('kaput', grchat)
-                    exit()
+                    #time.sleep(20)
+                    main()
+                else:
+                    acktext = "{} said {} - ok".format(sender, text)
+                    send_message(acktext, grchat)
+                    print ('poslal podtver v grup')
+                    status = 'confirmed'
+                    main()
+                
             else:
                 acktext = "{} said {} - ok".format(sender, text)
                 send_message(acktext, grchat)
                 print ('poslal podtver v grup')
                 status = 'confirmed'
+                main()
 #                confirmed_alert = tname
 #            else:
     #            last_textchat = (text, chat)
