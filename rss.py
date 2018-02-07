@@ -116,7 +116,8 @@ def get_alert():
     return alert
 
 
-
+def get_watchman()
+    
 
 
 
@@ -127,10 +128,10 @@ def main_vars():
     mychat = '384016403'
     newchat = '543548589'
 
-#mytext = 'Prosypaisia'
-#grchat = '-206368020'
-#mychat = '384016403'
-#newchat = '543548589'
+mytext = 'Prosypaisia'
+grchat = '-206368020'
+mychat = '384016403'
+newchat = '543548589'
 
 ############################################################################
 
@@ -144,10 +145,6 @@ def main():
     while status != 'confirmed':
         num_records = get_records()
         print (num_records,'haha')
-        mytext = 'Prosypaisia'
-        grchat = '-206368020'
-        mychat = '384016403'
-        newchat = '543548589'
         print(get_alert())
 
 #    If no down, sleep X minutes, go to start
@@ -169,34 +166,32 @@ def main():
                 time.sleep(20)
                 last_message = get_last_from_user(get_updates(), "john")
                 print(get_last_from_user(get_updates(), "john"))
-                #print()
                 #last_message = get_last_from_user(get_updates(), "mymy")
 #                text, chat, sender = get_last_chat_id_and_text(get_updates())
                 print (last_message, "Otvet G2" )
-                if ( (last_message) == 'na podhvate'):
+                if ( (last_message) != 'confirm'):
                     send_message('kaput', grchat)
                     #time.sleep(20)
                     main()
                 else:
-                    acktext = "{} said {} - ok".format(sender, text)
+                    acktext = "{} said {} - ok".format("john", last_message)
                     send_message(acktext, grchat)
                     print ('poslal podtver v grup')
+                    while (last_message != 'on call'):
+                        time.sleep(2)
+                        last_message = get_last_from_user(get_updates(), "john" )
                     status = 'confirmed'
                     main()
                 
             else:
-                acktext = "{} said {} - ok".format(sender, text)
+                acktext = "{} said {} - ok".format("O", last_message)
                 send_message(acktext, grchat)
                 print ('poslal podtver v grup')
+                while (last_message != 'on call'):
+                    time.sleep(2)
+                    last_message = get_last_from_user(get_updates(), "O")
                 status = 'confirmed'
                 main()
-#                confirmed_alert = tname
-#            else:
-    #            last_textchat = (text, chat)
-#                time.sleep(1.5)
-#                count = count + 1
-
-
 
 
 
