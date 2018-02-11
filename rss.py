@@ -8,29 +8,77 @@ import sys
 from pprint import pprint
 from config import *
 
-print("TITLE","                                                   ","LINK")
-print("------------------------------------------------------------------")
-
-feed = feedparser.parse( rss_url )
-
-y = len(feed[ "items" ])
+#print("TITLE","                                                   ","LINK")
+#print("------------------------------------------------------------------")
 #
-
-print (y)
-
-tname = {}
-for x in range(0,y):
-    tname[x] = feed["items"][x][ "title" ]
+#feed = feedparser.parse( rss_url )
+#
+#y = len(feed[ "items" ])
+##
+#
+#print (y)
+#
+#tname = {}
+#for x in range(0,y):
+#    tname[x] = feed["items"][x][ "title" ]
+##    print ()
+#    if ('down' in tname[x]):
+#        print (tname[x])
+#        atext = tname[x]
+##    if tname[x] == confirmed_alert:
+##        print('It is confirmed alert')
+#    
+#tname = {}
+#for x in range(0,y):
+#    tname[x] = feed["items"][x][ "title" ]
+#    kuku = feed["items"]
+#    pprint(kuku)
 #    print ()
-    if ('down' in tname[x]):
-        print (tname[x])
-        atext = tname[x]
-#    if tname[x] == confirmed_alert:
-#        print('It is confirmed alert')
-    
+#  #  if ('down' in tname[x]):
+#  #      print (tname[x])
+#  #      atext = tname[x]
+##
+##############################################################
 
-#############################################################
+purl = 'https://www.site24x7.com/api/current_status'
+headers = {'Accept': 'application/json; version=2.0', 'Authorization': 'Zoho-authtoken fb1d3b5e97836bb98c98d24ba1f01380'}
 
+def get_purl(purl, headers=headers):
+    response = requests.get(purl, headers=headers)
+    pcontent = response.content.decode("utf8")
+    jspcontent = json.loads(pcontent)
+    return jspcontent
+
+pprint(get_purl(purl, headers=headers))
+
+def get_last_fromsite(updates, user):
+    y = len(updates[""])
+#    print (y)
+#    print('after number')
+    for x in range(0,y):
+#        pprint(updates.get('result'))
+        sender = updates['result'][x]['message']['from']['first_name']
+#        sender = updates['result'][x]['message']['from']['first_name']
+#        print("----------------------") 
+#        print('the sender is', sender)
+#        print('####afetrsender#####')
+#        print('the user is', user)        
+#        print('#### Loop end #####')
+#        sender.get('first_name')
+#        if re.search(r'sender', "{}".format(user)):
+#        if re.search(r'"{}".format(user)', sender):
+        if (user == sender):
+#            print('inside if')
+            #pprint (updates.get('result').get('message').get('text'))
+            last_message = updates['result'][x]['message']['text']
+#            pprint(last_message)
+#            print('-------------')
+#        else:
+#            print(last_message)
+    return last_message
+
+
+##############################################################
 
 def get_url(url):
     response = requests.get(url)
