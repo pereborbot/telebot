@@ -1,4 +1,5 @@
 import time
+import datetime
 import json
 import requests
 import re
@@ -116,7 +117,22 @@ def get_alert():
     return alert
 
 
-def get_watchman()
+def get_watchman():
+    weekNumber = datetime.date.today().isocalendar()[1]
+    print ('Week number:', weekNumber)
+    if ((weekNumber % 2) == 0):
+#        print('hello')
+        watchman = "O"
+        watchman_chat = '384016403'
+        reservist = "john"
+        reservist_chat = '543548589'
+    else:
+        watchman = "john"
+        watchman_chat = '543548589'
+        reservist = "O"
+        reservist_chat = '384016403'
+    return (watchman, watchman_chat, reservist, reservist_chat)
+
     
 
 
@@ -140,6 +156,8 @@ newchat = '543548589'
 # 1. Start listen - get update from 24x7
 def main():
     print ('STARTING ...')
+    watchman, watchman_chat, reservist, reservist_chat = (get_watchman())
+    print (watchman, reservist)
     status = 'not confirmed'
     print ('Status', status)
     while status != 'confirmed':
@@ -157,44 +175,44 @@ def main():
             print ('poslal v gruppu')
             print ('zhdu 20 sec')
             time.sleep(20)
-            last_message = get_last_from_user(get_updates(), "O")
-            print(get_last_from_user(get_updates(), "O"))
+            last_message = get_last_from_user(get_updates(), watchman)
+            print(get_last_from_user(get_updates(), watchman))
 #           text, chat, sender = get_last_chat_id_and_text(get_updates())
-            if ( (last_message) == 'on call'):
-                send_message(mytext, newchat)
+            ##################################################################     
+            if (last_message == 'on call'):
+                send_message(mytext, reservist_chat)
                 print ('poslal v lichnyi naparniku')
                 time.sleep(20)
-                last_message = get_last_from_user(get_updates(), "john")
-                print(get_last_from_user(get_updates(), "john"))
-                #last_message = get_last_from_user(get_updates(), "mymy")
+                last_message = get_last_from_user(get_updates(), reservist)
+                print(get_last_from_user(get_updates(), reservist))
 #                text, chat, sender = get_last_chat_id_and_text(get_updates())
                 print (last_message, "Otvet G2" )
+            ##################################################################
                 if ( (last_message) != 'confirm'):
                     send_message('kaput', grchat)
                     #time.sleep(20)
                     main()
                 else:
-                    acktext = "{} said {} - ok".format("john", last_message)
+                    acktext = "{} said {} - ok".format(reservist, last_message)
                     send_message(acktext, grchat)
                     print ('poslal podtver v grup')
                     while (last_message != 'on call'):
                         time.sleep(2)
-                        last_message = get_last_from_user(get_updates(), "john" )
+                        last_message = get_last_from_user(get_updates(), reservist)
                     status = 'confirmed'
                     main()
-                
             else:
-                acktext = "{} said {} - ok".format("O", last_message)
+                acktext = "{} said {} - ok".format(watchman, last_message)
                 send_message(acktext, grchat)
                 print ('poslal podtver v grup')
                 while (last_message != 'on call'):
                     time.sleep(2)
-                    last_message = get_last_from_user(get_updates(), "O")
+                    last_message = get_last_from_user(get_updates(), watchman)
                 status = 'confirmed'
                 main()
 
 
-
+#
 
 
 #    If YES down, 
@@ -284,8 +302,6 @@ if __name__ == '__main__':
     main()
 
 
-
-
 #text, chat = get_last_chat_id_and_text(get_updates())
 #send_message(text, chat)
 
@@ -296,6 +312,3 @@ if __name__ == '__main__':
 #    mytext = 'Prosypaisia'
 #    mychat_id = updates["result"][mylast_update]["message"]["chat"]["id"]
 #    return (mytext, mychat_id)
-
-
-

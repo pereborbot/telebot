@@ -45,8 +45,27 @@ weekNumber = datetime.date.today().isocalendar()[1]
 print ('Week number:', weekNumber)
 
 
-def watchman():
-    if (weekNumber / 2)
+def get_watchman():
+#    print (weekNumber % 2)
+    if ((weekNumber % 2) == 0):
+#        print('hello')
+        watchman = "O"
+        reservist = "john"
+    else:
+        watchman = "john"
+        reservist = "O"
+    return (watchman, reservist)
+#get_watchman()
+
+watchman, reservist = (get_watchman())
+
+print(watchman)
+print(reservist)
+
+
+
+
+
 
 
 

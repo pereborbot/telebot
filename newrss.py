@@ -65,6 +65,25 @@ def get_last_chat_id_and_text(updates):
     sender = updates["result"][last_update]["message"]["from"]["first_name"]
     return (text, chat_id, sender)
 
+user = 'O'
+
+def get_last_message_from_user(updates):
+    num_updates = len(updates["result"]["message"]["from"]["O"])
+#    num_updates = len(updates["result"])
+    last_update = num_updates - 1
+    text = updates["result"][last_update]["message"]["text"]
+    chat_id = updates["result"][last_update]["message"]["chat"]["id"]
+    sender = updates["result"][last_update]["message"]["from"]["first_name"]
+    return (text1, chat_id1, sender1)
+
+
+
+
+#text, chat_id, sender = get_last_message_from_user(updates)
+
+textt, chatt, senderr = get_last_message_from_user(get_updates())
+
+
 
 def send_message(text, chat_id):
     url = URL + "sendMessage?text={}&chat_id={}".format(text, chat_id)
@@ -107,11 +126,11 @@ def main():
             if ('down' in atext):
                 print ('upalo')
                 send_message(atext, grchat)
-                print ('poslal v gruppu')
+                print ('poslal v gruppu', atext)
                 print ('zhdu 10 sec')
                 time.sleep(20)
                 text, chat, sender = get_last_chat_id_and_text(get_updates())
-                if ( (text) == 'on call'):
+                if ( (text) == 'on call' and (sender == 'O')):
 #and (chat) == mychat ):
                     send_message(mytext, newchat)
                     print ('poslal v lichnyi naparniku')
@@ -120,9 +139,10 @@ def main():
                     text, chat, sender = get_last_chat_id_and_text(get_updates())
                     print (text)
                     if ( (text) == 'on call'):
-                        send_message('kaput', grchat)
+                        send_message('(atext) kaput, grchat')
                         break
                 else:
+                    print (text)
                     acktext = "{} said {} - ok".format(sender, text)
                     send_message(acktext, grchat)
                     print ('poslal podtver v grup')
