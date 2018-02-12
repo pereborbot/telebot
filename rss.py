@@ -42,7 +42,7 @@ from config import *
 ##############################################################
 
 purl = 'https://www.site24x7.com/api/current_status'
-headers = {'Accept': 'application/json; version=2.0', 'Authorization': 'Zoho-authtoken fb1d3b5e97836bb98c98d24ba1f01380'}
+headers = {'Accept': 'application/json; version=2.0', 'Authorization': 'Zoho-authtoken fb1d3b5e97836bb98c98d24ba1'}
 
 def get_purl(purl, headers=headers):
     response = requests.get(purl, headers=headers)
